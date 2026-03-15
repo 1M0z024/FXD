@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>病房分区B单元 - 阿尔图的观察日志</title>
+		<style>
+			/* 全局样式 */
+			body {
+				margin: 0;
+				padding: 0;
+				font-family: 'Arial', sans-serif;
+				background-color: #f0f0f0;
+				background-image: 
+					linear-gradient(rgba(255,255,255,0.8) 1px, transparent 1px),
+					linear-gradient(90deg, rgba(255,255,255,0.8) 1px, transparent 1px);
+				background-size: 20px 20px;
+				color: #333;
+				min-height: 100vh;
+			}
+
+			/* 标题样式 */
+			.auv {
+				text-align: center;
+				padding: 20px 0;
+				background-color: #ffffff;
+				box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+				position: relative;
+				border-bottom: 3px solid #e74c3c;
+			}
+
+			.auv h1 {
+				margin: 0;
+				color: #2c3e50;
+				font-size: 24px;
+				font-weight: bold;
+				text-transform: uppercase;
+				letter-spacing: 1px;
+			}
+
+			.auv p {
+				margin: 10px 0 0;
+				color: #e74c3c;
+				font-size: 14px;
+			}
+
+			/* 导航栏 */
+			.nav {
+				background-color: #2c3e50;
+				text-align: center;
+				padding: 10px 0;
+				box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+			}
+
+			.nav a {
+				color: #ecf0f1;
+				padding: 10px 15px;
+				text-decoration: none;
+				display: inline-block;
+				transition: all 0.3s ease;
+				border-radius: 3px;
+				margin: 0 5px;
+			}
+
+			.nav a:hover {
+				background-color: #e74c3c;
+				transform: translateY(-2px);
+				box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+			}
+
+			/* 分隔线 */
+			hr {
+				border: 1px solid #dddddd;
+				margin: 20px 0;
+			}
+
+			/* 折叠表样式 */
+			details {
+				width: 80%;
+				max-width: 800px;
+				margin: 20px auto;
+				background-color: #ffffff;
+				border: 1px solid #dddddd;
+				border-radius: 5px;
+				box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+				overflow: hidden;
+				transition: all 0.3s ease;
+			}
+
+			details:hover {
+				box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+				border-color: #e74c3c;
+			}
+
+			summary {
+				padding: 15px;
+				background-color: #f8f9fa;
+				cursor: pointer;
+				font-weight: bold;
+				color: #2c3e50;
+				border-bottom: 1px solid #dddddd;
+				transition: all 0.3s ease;
+				position: relative;
+			}
+
+			summary:hover {
+				background-color: #e9ecef;
+			}
+
+			summary::-webkit-details-marker {
+				display: none;
+			}
+
+			details[open] summary {
+				background-color: #e9ecef;
+				border-bottom: 1px solid #dddddd;
+			}
+
+			details div {
+				padding: 20px;
+			}
+
+			details p {
+				margin: 10px 0;
+				line-height: 1.6;
+			}
+
+			details a {
+				color: #3498db;
+				text-decoration: none;
+				transition: color 0.3s ease;
+				padding: 5px 10px;
+				display: inline-block;
+				border-radius: 3px;
+			}
+
+			details a:hover {
+				color: #e74c3c;
+				background-color: #f8f9fa;
+				text-decoration: underline;
+			}
+
+			/* 病房状态标签 */
+			.ward-status {
+				display: inline-block;
+				padding: 3px 8px;
+				border-radius: 10px;
+				font-size: 12px;
+				font-weight: bold;
+				margin-left: 10px;
+			}
+
+			.status-occupied {
+				background-color: #e74c3c;
+				color: white;
+			}
+
+			.status-empty {
+				background-color: #27ae60;
+				color: white;
+			}
+
+			.status-pending {
+				background-color: #f39c12;
+				color: white;
+			}
+
+			.status-mysterious {
+				background-color: #9b59b6;
+				color: white;
+			}
+
+			/* 医疗元素 */
+			.medical-info {
+				text-align: center;
+				margin: 20px 0;
+				padding: 15px;
+				background-color: #f8f9fa;
+				border-radius: 5px;
+				box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+				width: 80%;
+				max-width: 800px;
+				margin-left: auto;
+				margin-right: auto;
+			}
+
+			.medical-info p {
+				margin: 5px 0;
+				color: #666;
+				font-size: 14px;
+			}
+
+			/* 底部医疗元素 */
+			.footer {
+				text-align: center;
+				margin: 40px 0;
+				padding: 20px;
+				background-color: #f8f9fa;
+				border-top: 2px solid #e74c3c;
+			}
+
+			.footer p {
+				font-size: 14px;
+				color: #666;
+				margin: 5px 0;
+			}
+
+			/* 恐怖氛围元素 */
+			.eye-icon {
+				position: fixed;
+				bottom: 20px;
+				right: 20px;
+				width: 60px;
+				height: 60px;
+				background-color: rgba(231, 76, 60, 0.1);
+				border-radius: 50%;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				animation: float 3s ease-in-out infinite;
+			}
+
+			.eye-icon span {
+				font-size: 24px;
+				opacity: 0.7;
+			}
+
+			/* 动画效果 */
+			@keyframes float {
+				0%, 100% { transform: translateY(0px); }
+				50% { transform: translateY(-10px); }
+			}
+
+			/* 响应式设计 */
+			@media (max-width: 768px) {
+				.details,
+				.medical-info {
+					width: 95%;
+				}
+
+				.nav a {
+					padding: 8px 12px;
+					font-size: 14px;
+				}
+
+				.auv h1 {
+					font-size: 20px;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<!-- 标题 -->
+		<div class="auv">
+			<h1>病房分区B单元（23床）</h1>
+			<p>📍 位置：东区精神科大楼 | 📊 容量：23/23 床位已满</p>
+			<!-- 心电图效果 -->
+			
+		</div>
+		<!-- 导航栏 -->
+		<div class="nav">
+			<a href="1.html">首页</a>
+			<a href="病房A单元.html">上一个单元</a>
+			<a href="病房C单元.html">下一个单元</a>
+		</div>
+		<hr />
+		<!-- 医疗信息 -->
+		<div class="medical-info">
+			<p>🏥 奥斯曼第一人民医院 | 精神科</p>
+			<p>📋 病房状态：<span style="color: #e74c3c; font-weight: bold;">高度警戒</span></p>
+			<p>👥 医护人员：3 名医生 | 6 名护士 | 2 名护工</p>
+			<p>🔒 安全级别：三级防护</p>
+		</div>
+		<!-- 折叠表 -->
+		<details id="1">
+			<summary>
+				<span>【🌅】</span> 
+				<span>新日病房[位于东区L1-77号房] (仅有四张床)</span>
+				<span class="ward-status status-mysterious">神秘</span>
+			</summary>
+			<div>
+				<p>📂 <a href="" rel="nofollow">05号床新日之书:信息尚未公布</a></p>
+				<p>📂 <a href="">06号床新日之坠:信息尚未公布</a></p>
+				<p>📂 <a href="" rel="nofollow">07号床日之牢笼:信息尚未公布</a></p>
+				<hr />
+				<p style="font-size: 12px; color: #999; font-style: italic;">话说之前有这号房间吗?(不知名人士的笔记)</p>
+			</div>
+		</details>
+		<details id="2">
+			<summary>
+				<span>【🏥】</span> 
+				<span>原12号病房[位于东区L1-12号房】(仅有六张床)</span>
+				<span class="ward-status status-occupied">已满</span>
+			</summary>
+			<div>
+				<p>📂 <a href="" rel="nofollow">11号床伟业之国:信息尚未公布</a></p>
+				<p>📂 <a href="" rel="nofollow">12号床贤者之国:信息尚未公布</a></p>
+				<p>📂 <a href="" rel="nofollow">13号床命运之剪:信息尚未公布</a></p>
+				<p>📂 <a href="" rel="nofollow">14号床终点的笑声:信息尚未公布</a></p>
+				<p>📂 <a href="" rel="nofollow">15号床窃取的果实:信息尚未公布</a></p>
+				<hr />
+				<p style="font-size: 12px; color: #999;">⚠️ 该病房患者均有幻觉症状</p>
+			</div>
+		</details>
+		<details id="3">
+			<summary>
+				<span>【🏥】</span> 
+				<span>原13号病房[位于东区L1-13号房】(仅有五张床)</span>
+				<span class="ward-status status-occupied">已满</span>
+			</summary>
+			<div>
+				<p>📂 <a href="" rel="nofollow">16号床千廊之国:信息尚未公布</a></p>
+				<p>📂 <a href="">17号床命运的报偿:信息尚未公布</a></p>
+				<p>📂 <a href="" rel="nofollow">18号床灯影下:信息尚未公布</a></p>
+				<p>📂 <a href="" rel="nofollow">19号床低重的果实:信息尚未公布</a></p>
+				<hr />
+				<p style="font-size: 12px; color: #999;">⚠️ 该病房患者需24小时监护</p>
+			</div>
+		</details>
+		<details id="4">
+			<summary>
+				<span>【�️】</span> 
+				<span>誓言病房[位于东区L1-14号房](仅有八张床)</span>
+				<span class="ward-status status-occupied">已满</span>
+			</summary>
+			<div>
+				<p>📂 <a href="" rel="nofollow">20号床追忆之国:信息尚未公布</a></p>
+				<p>📂 <a href="" rel="nofollow">21号床红袍的叛星者:信息尚未公布</a></p>
+				<p>📂 <a href="" rel="nofollow">22号床星剑的遗言:信息尚未公布</a></p>
+				<p>📂 <a href="" rel="nofollow">23号床丛林之国:信息尚未公布</a></p>
+				<p>📂 <a href="" rel="nofollow">24号床星剑之国:信息尚未公布</a></p>
+				<p>📂 <a href="" rel="nofollow">25号床誓言的囚徒:信息尚未公布</a></p>
+				<p>📂 <a href="" rel="nofollow">26号床冉星再升:信息尚未公布</a></p>
+				<hr />
+				<p style="font-size: 12px; color: #e74c3c; font-weight: bold;">⚠️ 高危病房：禁止单独进入</p>
+			</div>
+		</details>
+		<!-- 底部 -->
+		<div class="footer">
+			<p>🏥 奥斯曼第一人民医院</p>
+			<p>📍 东区精神科大楼 </p>
+			<p>📞 ■■■■■■■■■■■■</p>
+			<p style="font-size: 12px; color: #999; margin-top: 10px;">
+				*本作品纯属虚构，如有雷同纯属巧合，网页所有信息均是网络公开信息
+			</p>
+		</div>
+		<!-- 恐怖氛围元素 -->
+		
+		<!-- 折叠表状态保存脚本 -->
+		<script>
+			// 为所有details元素添加事件监听器
+			document.querySelectorAll('details').forEach(detail => {
+				// 页面加载时恢复状态
+				const id = detail.id;
+				const isOpen = localStorage.getItem(`detail_${id}`) === 'true';
+				if (isOpen) {
+					detail.setAttribute('open', '');
+				}
+				
+				// 监听状态变化
+				detail.addEventListener('toggle', () => {
+					localStorage.setItem(`detail_${id}`, detail.open);
+				});
+			});
+		</script>
+	</body>
+</html>
